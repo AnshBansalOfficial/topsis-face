@@ -44,6 +44,9 @@ def process_face_image(image_path):
     points = [(int(landmark.x * image.shape[1]), int(landmark.y * image.shape[0]))
               for landmark in face_landmarks.landmark]
 
+    # Debug: Print the computed points
+    print("Points:", points)
+
     # Define the exact facial landmarks for the face contours
     face_contours = [
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],  # Jawline
@@ -57,10 +60,24 @@ def process_face_image(image_path):
         [60, 61, 62, 63, 64, 65, 66, 67],  # Inner lip
     ]
 
+    # Debug: Print the face contours
+    print("Face Contours:", face_contours)
+
     # Draw the face mask using yellow lines
     for contour in face_contours:
         for i in range(len(contour) - 1):
-            cv2.line(mask_frame, points[contour[i]], points[contour[i + 1]], (0, 255, 255), 2)
+            pt1 = points[contour[i]]
+            pt2 = points[contour[i + 1]]
+            # Ensure points are within valid range
+            if 0 <= pt1[0] < image.shape[1] and 0 <= pt1[1] < image.shape[0] and \
+               0 <= pt2[0] < image.shape[1] and 0 <= pt2[1] < image.shape[0]:
+                cv2.line(mask_frame, pt1, pt2, (0, 255, 255), 2)
+
+    # Optionally, use predefined MediaPipe connections for contours
+    mp_drawing.draw_landmarks(
+        mask_frame, face_landmarks, mp_face_mesh.FACEMESH_CONTOURS,
+        mp_drawing.DrawingSpec(color=(0, 255, 255), thickness=2, circle_radius=0)  # Solid lines
+    )
 
     # Resize the windows for display
     scale_factor = 0.25  # Adjust the scale factor as needed

@@ -33,47 +33,36 @@ while True:
             # Draw face landmarks in the original frame (for reference)
             mp_drawing.draw_landmarks(frame, face_landmarks, mp_face_mesh.FACEMESH_CONTOURS)
 
-            # Define regions for the facial mask
+            # Create a frame for drawing the mask (black background)
+            mask_frame = np.zeros_like(frame)
+
+            # Define the points for the face structure (landmarks)
             points = [(int(landmark.x * frame.shape[1]), int(landmark.y * frame.shape[0]))
                       for landmark in face_landmarks.landmark]
 
-            # Define regions for the facial mask
-            jaw = points[0:17]  # Jawline
-            left_eyebrow = points[17:22]  # Left eyebrow
-            right_eyebrow = points[22:27]  # Right eyebrow
-            nose_bridge = points[27:31]  # Nose bridge
-            lower_nose = points[31:36]  # Lower part of the nose
-            left_eye = points[36:42]  # Left eye
-            right_eye = points[42:48]  # Right eye
-            outer_lip = points[48:60]  # Outer lip
-            inner_lip = points[60:68]  # Inner lip
-            forehead = points[8:9]  # Single point for the forehead (can be expanded)
-            cheeks = points[1:5] + points[13:17]  # Cheeks (left and right side)
-            nose_tip = points[33:34]  # Nose tip
-            chin = points[5:11]  # Chin area
-
-            # Define expanded regions for the face mask
-            mask_regions = [
-                jaw, left_eyebrow, right_eyebrow, nose_bridge, lower_nose,
-                left_eye, right_eye, outer_lip, inner_lip,
-                forehead, cheeks, nose_tip, chin
+            # Define the exact facial landmarks for the face contours (as used in MediaPipe)
+            face_contours = [
+                [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],  # Jawline
+                [17, 18, 19, 20, 21],  # Left eyebrow
+                [22, 23, 24, 25, 26],  # Right eyebrow
+                [27, 28, 29, 30],  # Nose bridge
+                [31, 32, 33, 34, 35],  # Lower nose
+                [36, 37, 38, 39, 40, 41],  # Left eye
+                [42, 43, 44, 45, 46, 47],  # Right eye
+                [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59],  # Outer lip
+                [60, 61, 62, 63, 64, 65, 66, 67],  # Inner lip
             ]
 
-            # Create a separate mask frame (black background)
-            mask_frame = np.zeros_like(frame)
+            # Draw the connections (lines) for the face mask using yellow color
+            for contour in face_contours:
+                for i in range(len(contour) - 1):
+                    # Connect each point to the next one
+                    cv2.line(mask_frame, points[contour[i]], points[contour[i + 1]], (0, 255, 255), 2)
 
-            # Draw lines to connect points and create the face mask
-            for region in mask_regions:
-                for i in range(len(region) - 1):
-                    cv2.line(mask_frame, region[i], region[i + 1], (0, 255, 255), 2)  # Draw lines in yellow
-                # Connect the last point to the first to close the loop for circular regions
-                if region in [left_eye, right_eye, outer_lip, inner_lip]:
-                    cv2.line(mask_frame, region[-1], region[0], (0, 255, 0), 2)  # Green for closing loops
-
-            # Display the face mask in a new window
+            # Display the mask frame (highlighting the face structure with yellow lines)
             cv2.imshow("Face Mask", mask_frame)
 
-    # Display the original frame (with landmarks)
+    # Display the original frame with landmarks
     cv2.imshow("Original Frame with Landmarks", frame)
 
     # Break the loop if 'q' is pressed
