@@ -126,5 +126,5 @@ def process_face_image(image_path):
     cv2.destroyAllWindows()
 
 # Provide the path to the image
-image_path = "C:/Users/anshi/Desktop/face-topsis/faces/angelina.jpg"  # Replace with your image path
+image_path = "C:/Users/anshi/Desktop/face-topsis/faces/anil.jpg"  # Replace with your image path
 process_face_image(image_path)

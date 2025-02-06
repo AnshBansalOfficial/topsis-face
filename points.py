@@ -7,8 +7,8 @@ mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=1)
 
 # Load an image
-image = cv2.imread("C:/Users/anshi/Desktop/face-topsis/faces/angelina.jpg")  # Replace with your image path
-resize_factor = 1.5  # Set the resize factor (e.g., 0.5 for 50% smaller)
+image = cv2.imread("C:/Users/anshi/Desktop/face-topsis/faces/face.jpg")  # Replace with your image path
+resize_factor = 0.5  # Set the resize factor (e.g., 0.5 for 50% smaller)
 image = cv2.resize(image, None, fx=resize_factor, fy=resize_factor, interpolation=cv2.INTER_AREA)
 image_height, image_width, _ = image.shape
 

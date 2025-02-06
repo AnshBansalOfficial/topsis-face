@@ -132,7 +132,7 @@ def calculate_facial_features(image_path, resize_factor=1.0):
     return symmetry_score, golden_ratio_score
 
 # Run the calculation on the uploaded image
-image_path = "C:/Users/anshi/Desktop/face-topsis/faces/angelina.jpg"  # Path to the uploaded image
+image_path = "C:/Users/anshi/Desktop/face-topsis/faces/meeyank.jpg"  # Path to the uploaded image
 symmetry_score, golden_ratio_score = calculate_facial_features(image_path, resize_factor=0.6)
 
 if symmetry_score is not None:
